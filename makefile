@@ -12,3 +12,13 @@ clean_transcript:
 clean_all:
 	$(MAKE) clean_transcript
 	python -c "import shutil; shutil.rmtree('work')"
+
+help:
+	@echo -e "  		\n\
+    Targets				\n\
+    +----------+		\n\
+    help 				\n\
+    clean_transcript	\n\
+    clean_all			\n\
+	sim					\n\
+    "
