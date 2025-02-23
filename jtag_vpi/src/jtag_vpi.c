@@ -16,6 +16,8 @@
 
 #include "jtag_common.h"
 
+#include <stddef.h>
+
 static void terminate_simulation(void)
 {
 	vpi_control(vpiFinish, 1);

@@ -1,4 +1,5 @@
 `define SCR1_DBG_EN
+`timescale 1ns/1ps
 
 module top (
     input clk,
@@ -12,6 +13,22 @@ module top (
     axil_if imem_axil_if();
     jtag_if jtag_curr_if();
 
+    jtag_vpi #(.DEBUG_INFO(0), .TCK_HALF_PERIOD(20*12))
+    jtag_vpi0 
+    (
+        .tms(jtag_curr_if.tms),
+        .tck(jtag_curr_if.tck),
+        .tdi(jtag_curr_if.tdi),
+        .tdo(jtag_curr_if.tdo),
+        .enable(1'b1),
+        .init_done(jtag_curr_if.trst_n)
+    );
+
+    initial begin
+        jtag_curr_if.trst_n = 1'b0; 
+        #100 jtag_curr_if.trst_n = 1'b1;
+
+    end
 
     scr1_top_axi_wrap our_scr1 (
         .dmem_axi_bus(dmem_axil_if),
