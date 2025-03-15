@@ -42,7 +42,8 @@ clean_transcript:
 clean_all:
 	$(MAKE) clean_transcript
 	$(DEL_WORK_D_COMM)
-	
+
+.PHONY: clean_objs
 clean_objs:
 	$(DEL_OBJ_COMM) 
 
