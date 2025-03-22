@@ -20,7 +20,7 @@
 
 static void terminate_simulation(void)
 {
-	vpi_control(vpiFinish, 1);
+	vpi_control(vpiStop, 1);
 }
 
 void vpi_check_for_command(char *userdata)

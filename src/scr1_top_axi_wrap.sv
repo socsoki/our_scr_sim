@@ -7,9 +7,8 @@ module scr1_top_axi_wrap (
     axil_if.Master  imem_axi_bus,
     jtag_if         jtag_bus,
     input           clk,
-    input           rst
+    input           rst_n
 );
-    wire rst_n = ~rst;
 
     scr1_top_axi scr1_wrppd (
         .pwrup_rst_n                (rst_n),

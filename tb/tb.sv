@@ -4,11 +4,11 @@ module testbench;
     parameter CLK_PERIOD = 20;
 
     logic clk;
-    logic rst;
+    logic rst_n;
 
     jtag_if jtag_bus();
 
-    top top_with_scr1 (jtag_bus, clk, rst);
+    top top_with_scr1 (jtag_bus, clk, rst_n);
 
     jtag_vpi #(.DEBUG_INFO(0), .TCK_HALF_PERIOD(20 * 12))
     jtag_vpi0 
@@ -29,9 +29,9 @@ module testbench;
     end
 
     task reset();
-        rst = 0;
+        rst_n = 0;
         jtag_bus.trst_n = 1'b0; 
-        #100 rst = 1'b1;
+        #100 rst_n = 1'b1;
         #100 jtag_bus.trst_n = 1'b1;
     endtask
 
