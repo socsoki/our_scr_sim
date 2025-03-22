@@ -1,4 +1,5 @@
 `define SCR1_TAP_IDCODE         'hDEB11001
+`define SCR1_IPIC_EN
 
 
 module scr1_top_axi_wrap (
@@ -6,19 +7,18 @@ module scr1_top_axi_wrap (
     axil_if.Master  imem_axi_bus,
     jtag_if         jtag_bus,
     input           clk,
-    input           rst
+    input           rst_n
 );
-    wire rst_n = ~rst;
 
     scr1_top_axi scr1_wrppd (
-        .pwrup_rst_n                (1'b1),
-        .rst_n                      (1'b1),
+        .pwrup_rst_n                (rst_n),
+        .rst_n                      (rst_n),
         .cpu_rst_n                  (rst_n),
 
         .test_mode                  (1'b0),
         .test_rst_n                 (1'b1),
         .clk                        (clk),
-        .rtc_clk                    (1'b0),
+        .rtc_clk                    (clk),
 
         // .sys_rst_n_o                (),
         // .sys_rdc_qlfy_o             (),
@@ -27,9 +27,13 @@ module scr1_top_axi_wrap (
         .fuse_idcode                (`SCR1_TAP_IDCODE),
         .sys_rdc_qlfy_o             (),
 
-        // .ext_irq                    (),
+        // IRQ
+`ifdef SCR1_IPIC_EN
+        .irq_lines                  ('0),
+`else // SCR1_IPIC_EN
+        .ext_irq                    ('0),
+`endif // SCR1_IPIC_EN
         .soft_irq                   (1'b0),
-
 
         .trst_n                     (jtag_bus.trst_n),
         .tck                        (jtag_bus.tck),
@@ -40,7 +44,7 @@ module scr1_top_axi_wrap (
     
         // Instruction Memory Interface
         .io_axi_imem_awid           (),
-        .io_axi_imem_awaddr         (),
+        .io_axi_imem_awaddr         (imem_axi_bus.aw_addr),
         .io_axi_imem_awlen          (),
         .io_axi_imem_awsize         (),
         .io_axi_imem_awburst        (),
@@ -50,19 +54,19 @@ module scr1_top_axi_wrap (
         .io_axi_imem_awregion       (),
         .io_axi_imem_awuser         (),
         .io_axi_imem_awqos          (),
-        .io_axi_imem_awvalid        (),
-        .io_axi_imem_awready        ('0),
-        .io_axi_imem_wdata          (),
-        .io_axi_imem_wstrb          (),
+        .io_axi_imem_awvalid        (imem_axi_bus.aw_valid),
+        .io_axi_imem_awready        (imem_axi_bus.aw_ready),
+        .io_axi_imem_wdata          (imem_axi_bus.w_data),
+        .io_axi_imem_wstrb          (imem_axi_bus.w_strb),
         .io_axi_imem_wlast          (),
         .io_axi_imem_wuser          (),
-        .io_axi_imem_wvalid         (),
-        .io_axi_imem_wready         ('0),
+        .io_axi_imem_wvalid         (imem_axi_bus.w_valid),
+        .io_axi_imem_wready         (imem_axi_bus.w_ready),
         .io_axi_imem_bid            ('0),
-        .io_axi_imem_bresp          ('0),
-        .io_axi_imem_bvalid         ('0),
+        .io_axi_imem_bresp          (imem_axi_bus.b_resp),
+        .io_axi_imem_bvalid         (imem_axi_bus.b_valid),
         .io_axi_imem_buser          ('0),
-        .io_axi_imem_bready         (),
+        .io_axi_imem_bready         (imem_axi_bus.b_ready),
         .io_axi_imem_arid           (),
         .io_axi_imem_araddr         (imem_axi_bus.ar_addr),
         .io_axi_imem_arlen          (),
@@ -79,7 +83,7 @@ module scr1_top_axi_wrap (
         .io_axi_imem_rid            ('0),
         .io_axi_imem_rdata          (imem_axi_bus.r_data),
         .io_axi_imem_rresp          (imem_axi_bus.r_resp),
-        .io_axi_imem_rlast          ('0),
+        .io_axi_imem_rlast          ('1),
         .io_axi_imem_ruser          ('0),
         .io_axi_imem_rvalid         (imem_axi_bus.r_valid),
         .io_axi_imem_rready         (imem_axi_bus.r_ready),
@@ -125,7 +129,7 @@ module scr1_top_axi_wrap (
         .io_axi_dmem_rid            ('0),
         .io_axi_dmem_rdata          (dmem_axi_bus.r_data),
         .io_axi_dmem_rresp          (dmem_axi_bus.r_resp),
-        .io_axi_dmem_rlast          ('0),
+        .io_axi_dmem_rlast          ('1),
         .io_axi_dmem_ruser          ('0),
         .io_axi_dmem_rvalid         (dmem_axi_bus.r_valid),
         .io_axi_dmem_rready         (dmem_axi_bus.r_ready)
