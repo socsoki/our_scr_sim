@@ -120,7 +120,7 @@ begin
 		begin
 			if(DEBUG_INFO)
 				$display("%t ----> End of simulation\n", $time);
-			$finish();
+			$stop();
 		end
 
 		default:
@@ -128,7 +128,7 @@ begin
 			$display("Somehow got to the default case in the command case statement.");
 			$display("Command was: %x", cmd);
 			$display("Exiting...");
-			$finish();
+			$stop();
 		end
 
 		endcase // case (cmd)
