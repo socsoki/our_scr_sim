@@ -31,8 +31,7 @@ jtag.so : $(C_OBJ)
 
 .PHONY: sim
 sim:
-	@echo "Start sim!"
-	@vsim -do "scripts/questa.tcl"
+	vsim -do "scripts/questa.tcl"
 
 .PHONY: clean_transcript
 clean_transcript:
@@ -49,13 +48,13 @@ clean_objs:
 
 .PHONY: help
 help:
-	@echo -e "  		\n\
-    Targets				\n\
-    +----------+		\n\
-    help 				\n\
-	build_vpi 		    \n\
-    clean_transcript	\n\
-    clean_all			\n\
+	@echo -e "			\n\
+	Targets				\n\
+	+----------+		\n\
+	help				\n\
+	build_vpi			\n\
+	clean_transcript	\n\
+	clean_all			\n\
 	clean_objs			\n\
 	sim					\n\
-    "
+	"

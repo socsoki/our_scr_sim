@@ -5,3 +5,4 @@ jtag.so
 jtag_vpi.o
 jtag_common.o
 vsim.wlf
+TODO.md
