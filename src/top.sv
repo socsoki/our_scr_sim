@@ -6,12 +6,11 @@ module top (
     input clk,
     input rst_n
 );
-
     wire rst = ~rst_n;
 
     axil_if dmem_axil_if();
     axil_if imem_axil_if();
-
+    axil_if ram_axil_bus();
 
     scr1_top_axi_wrap our_scr1 (
         .dmem_axi_bus(dmem_axil_if),
@@ -21,15 +20,19 @@ module top (
         .rst_n
     );
 
-    axil_ram_wrap imem_to_ram (
+    axil_interconnect_wrap scr1_interconnect(
         .clk,
         .rst,
-        .axil(imem_axil_if)
+        .imem_axil_bus(imem_axil_if),
+        .dmem_axil_bus(dmem_axil_if),
+        .ram_axil_bus(ram_axil_bus)
     );
-    axil_ram_wrap dmem_to_ram (
+    
+    axil_ram_wrap axil_ram (
         .clk,
         .rst,
-        .axil(dmem_axil_if)
+        .axil(ram_axil_bus)
     );
+
 
 endmodule

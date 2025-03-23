@@ -4,7 +4,10 @@ module axil_ram_wrap (
     input  wire     rst
 );
 
-    axil_ram wrap_inst (
+    axil_ram # (
+        .ADDR_WIDTH(16),
+        .DATA_WIDTH(32)
+    ) wrap_inst (
         .clk,
         .rst,
         .s_axil_awaddr (axil.aw_addr ),
