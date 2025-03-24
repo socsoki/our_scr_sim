@@ -3,6 +3,7 @@
 
 module top (
     jtag_if jtag_curr_if,
+    uart_if uart_bus,
     input clk,
     input rst_n
 );
@@ -10,6 +11,7 @@ module top (
 
     axil_if dmem_axil_if();
     axil_if imem_axil_if();
+    axil_if uart_axil_bus();
     axil_if ram_axil_bus();
 
     scr1_top_axi_wrap our_scr1 (
@@ -25,7 +27,15 @@ module top (
         .rst,
         .imem_axil_bus(imem_axil_if),
         .dmem_axil_bus(dmem_axil_if),
+        .uart_axil_bus(uart_axil_bus),
         .ram_axil_bus(ram_axil_bus)
+    );
+
+    uart_wrap uart(
+        .clk,
+        .rst,
+        .uart_axil_bus,
+        .uart_bus
     );
     
     axil_ram_wrap axil_ram (

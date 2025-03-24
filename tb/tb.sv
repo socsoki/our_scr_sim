@@ -7,10 +7,11 @@ module testbench;
     logic rst_n;
 
     jtag_if jtag_bus();
+    uart_if uart_bus();
 
-    top top_with_scr1 (jtag_bus, clk, rst_n);
+    top top_with_scr1 (jtag_bus, uart_bus, clk, rst_n);
 
-    jtag_vpi #(.DEBUG_INFO(0), .TCK_HALF_PERIOD(20 * 12))
+    jtag_vpi #(.DEBUG_INFO(0), .TCK_HALF_PERIOD(CLK_PERIOD * 6))
     jtag_vpi0 
     (
         .tms(jtag_bus.tms),
