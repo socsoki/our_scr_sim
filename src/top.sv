@@ -12,6 +12,9 @@ module top (
     axil_if imem_axil_if();
     axil_if ram_axil_bus();
 
+    axil_if uart_axil_bus();
+    uart_if uart_bus();
+
     scr1_top_axi_wrap our_scr1 (
         .dmem_axi_bus(dmem_axil_if),
         .imem_axi_bus(imem_axil_if),
@@ -25,9 +28,17 @@ module top (
         .rst,
         .imem_axil_bus(imem_axil_if),
         .dmem_axil_bus(dmem_axil_if),
-        .ram_axil_bus(ram_axil_bus)
+        .ram_axil_bus(ram_axil_bus),
+        .uart_axil_bus(uart_axil_bus)
     );
     
+    uart_wrap uart (
+        .clk,
+        .rst,
+        .uart_axil_bus(uart_axil_bus),
+        .uart_bus(uart_bus)
+    );
+
     axil_ram_wrap axil_ram (
         .clk,
         .rst,

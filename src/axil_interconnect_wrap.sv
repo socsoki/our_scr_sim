@@ -4,40 +4,43 @@ module axil_interconnect_wrap (
 
     axil_if.Slave imem_axil_bus,
     axil_if.Slave dmem_axil_bus,
-
+    
+    axil_if.Master uart_axil_bus,
     axil_if.Master ram_axil_bus
 );
-    
+    logic [2:0] uart_awport;
+    logic [2:0] uart_arprot;
+
     axil_interconnect #(
-        .M_COUNT(1),
+        .M_COUNT(2),
         .S_COUNT(2),
         .DATA_WIDTH(32),
         .ADDR_WIDTH(32),
-        .M_ADDR_WIDTH('d24)
+        .M_BASE_ADDR({32'h00000000, 32'hf0000000})
     ) axil_interconnect (
         .clk                                  (clk),
         .rst                                  (rst),
 
         // AXI lite slave interface
-        .m_axil_awvalid (ram_axil_bus.aw_valid),
-        .m_axil_awaddr  (ram_axil_bus.aw_addr),
-        .m_axil_awprot  (ram_axil_bus.aw_prot),
-        .m_axil_awready (ram_axil_bus.aw_ready),
-        .m_axil_wdata   (ram_axil_bus.w_data),
-        .m_axil_wstrb   (ram_axil_bus.w_strb),
-        .m_axil_wvalid  (ram_axil_bus.w_valid),
-        .m_axil_wready  (ram_axil_bus.w_ready),
-        .m_axil_bresp   (ram_axil_bus.b_resp),
-        .m_axil_bvalid  (ram_axil_bus.b_valid),  
-        .m_axil_bready  (ram_axil_bus.b_ready),
-        .m_axil_araddr  (ram_axil_bus.ar_addr),
-        .m_axil_arprot  (ram_axil_bus.ar_prot),
-        .m_axil_arvalid (ram_axil_bus.ar_valid),
-        .m_axil_arready (ram_axil_bus.ar_ready),
-        .m_axil_rdata   (ram_axil_bus.r_data),
-        .m_axil_rresp   (ram_axil_bus.r_resp),
-        .m_axil_rvalid  (ram_axil_bus.r_valid),
-        .m_axil_rready  (ram_axil_bus.r_ready),
+        .m_axil_awvalid ({ram_axil_bus.aw_valid, uart_axil_bus.aw_valid}),
+        .m_axil_awaddr  ({ram_axil_bus.aw_addr, uart_axil_bus.aw_addr}),
+        .m_axil_awprot  ({ram_axil_bus.aw_prot, uart_awport}),
+        .m_axil_awready ({ram_axil_bus.aw_ready, uart_axil_bus.aw_ready}),
+        .m_axil_wdata   ({ram_axil_bus.w_data, uart_axil_bus.w_data}),
+        .m_axil_wstrb   ({ram_axil_bus.w_strb, uart_axil_bus.w_strb}),
+        .m_axil_wvalid  ({ram_axil_bus.w_valid, uart_axil_bus.w_valid}),
+        .m_axil_wready  ({ram_axil_bus.w_ready, uart_axil_bus.w_ready}),
+        .m_axil_bresp   ({ram_axil_bus.b_resp, uart_axil_bus.b_resp}),
+        .m_axil_bvalid  ({ram_axil_bus.b_valid, uart_axil_bus.b_valid}),  
+        .m_axil_bready  ({ram_axil_bus.b_ready, uart_axil_bus.b_ready}),
+        .m_axil_araddr  ({ram_axil_bus.ar_addr, uart_axil_bus.ar_addr}),
+        .m_axil_arprot  ({ram_axil_bus.ar_prot, uart_arprot}),
+        .m_axil_arvalid ({ram_axil_bus.ar_valid, uart_axil_bus.ar_valid}),
+        .m_axil_arready ({ram_axil_bus.ar_ready, uart_axil_bus.ar_ready}),
+        .m_axil_rdata   ({ram_axil_bus.r_data, uart_axil_bus.r_data}),
+        .m_axil_rresp   ({ram_axil_bus.r_resp, uart_axil_bus.r_resp}),
+        .m_axil_rvalid  ({ram_axil_bus.r_valid, uart_axil_bus.r_valid}),
+        .m_axil_rready  ({ram_axil_bus.r_ready, uart_axil_bus.r_ready}),
 
         // AXI lite master interface
         .s_axil_awaddr  ({imem_axil_bus.aw_addr, dmem_axil_bus.aw_addr}),

@@ -19,6 +19,11 @@
 
 // TODO: Networking on win32 not yet supported (winsock2.h et al.)
 
+void __stack_chk_fail_local (void)
+{
+	__stack_chk_fail ();
+}
+
 // Default TCP port where to listen for incoming OpenOCD connections
 #ifndef JTAG_VPI_DEFAULT_SERVER_PORT
 #define JTAG_VPI_DEFAULT_SERVER_PORT  5555
@@ -70,6 +75,7 @@ void jtag_server_set_print_func( print_func_ptr_t f )
 /**
  * Create jtag_vpi server socket and start listening.
  */
+
 int jtag_server_create(int port, int loopback_only)
 {
 	struct sockaddr_in serv_addr;
