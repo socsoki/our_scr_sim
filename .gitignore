@@ -6,3 +6,6 @@ jtag_vpi.o
 jtag_common.o
 vsim.wlf
 TODO.md
+proga/proga.elf
+proga/proga.hex
+proga/proga.bin

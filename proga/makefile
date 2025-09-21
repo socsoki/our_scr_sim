@@ -6,11 +6,14 @@ START_FILE_NAME 	= start.S
 PROG_NAME 			?= proga.c
 
 .PHONY: all
-all: proga.bin
+all: proga.hex
+
+proga.hex: proga.bin
+	hexdump -v -e '"%08x\n"' $^ > $@
 
 proga.bin: proga.elf
 	$(OBJCOPY) -O binary $^ $@
-
+	
 proga.elf: $(START_FILE_NAME) $(PROG_NAME)
 	$(CC) -march=rv32imc -mabi=ilp32 -Tscr1TCM.ld -nostdlib -nostartfiles $^ -o $@
 
@@ -18,3 +21,4 @@ proga.elf: $(START_FILE_NAME) $(PROG_NAME)
 clean:
 	rm -f proga.elf
 	rm -f proga.bin
+	rm -f proga.hex

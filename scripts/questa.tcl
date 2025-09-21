@@ -18,4 +18,4 @@ foreach file_sv $all_files {
     vlog +acc $file_sv
 }
 
-vsim -pli jtag.so work.testbench
+vsim -pli jtag.so work.testbench +SCR1_TCM_PROGRAM=proga/proga.hex
